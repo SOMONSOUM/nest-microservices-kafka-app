@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { join } from 'path';
 import { PrismaModule } from './prisma/prisma.module';
 import { CommonModule } from '@app/common';
+import { KAFKA_CLIENT } from '@app/shared';
 
 @Module({
   imports: [
@@ -14,7 +15,7 @@ import { CommonModule } from '@app/common';
     }),
     ClientsModule.register([
       {
-        name: 'KAFKA_CLIENT',
+        name: KAFKA_CLIENT,
         transport: Transport.KAFKA,
         options: {
           client: {

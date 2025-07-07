@@ -5,12 +5,13 @@ import { AuthService } from './auth.service';
 import { PrismaService } from '../prisma';
 import { HashService } from '@app/common/hash';
 import { CommonModule } from '@app/common';
+import { KAFKA_CLIENT } from '@app/shared';
 
 @Module({
   imports: [
     ClientsModule.register([
       {
-        name: 'KAFKA_CLIENT',
+        name: KAFKA_CLIENT,
         transport: Transport.KAFKA,
         options: {
           client: {

@@ -4,6 +4,7 @@ import { AuthModule } from './auth/auth.module';
 import { CommonModule } from '@app/common';
 import { ConfigModule } from '@nestjs/config';
 import { join } from 'path';
+import { KAFKA_CLIENT } from '@app/shared';
 
 @Module({
   imports: [
@@ -13,7 +14,7 @@ import { join } from 'path';
     }),
     ClientsModule.register([
       {
-        name: 'KAFKA_CLIENT',
+        name: KAFKA_CLIENT,
         transport: Transport.KAFKA,
         options: {
           client: {

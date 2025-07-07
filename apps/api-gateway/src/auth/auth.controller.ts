@@ -1,6 +1,7 @@
 import { MicroserviceErrorHandler } from '@app/common/utils';
 import {
   AUTH_PATTERNS,
+  KAFKA_CLIENT,
   LoginDTO,
   LoginResponseDTO,
   RegisterDTO,
@@ -24,7 +25,7 @@ import { firstValueFrom } from 'rxjs';
 })
 export class AuthController {
   constructor(
-    @Inject('KAFKA_CLIENT') private readonly kafkaClient: ClientKafka,
+    @Inject(KAFKA_CLIENT) private readonly kafkaClient: ClientKafka,
   ) {}
 
   onModuleInit() {
