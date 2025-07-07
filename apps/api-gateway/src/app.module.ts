@@ -10,7 +10,10 @@ import { KAFKA_CLIENT } from '@app/shared';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: join(process.cwd(), 'apps', 'api-gateway', '.env'),
+      envFilePath: [
+        join(process.cwd(), 'apps', 'api-gateway', '.env'),
+        join(process.cwd(), '.env'),
+      ],
     }),
     ClientsModule.register([
       {

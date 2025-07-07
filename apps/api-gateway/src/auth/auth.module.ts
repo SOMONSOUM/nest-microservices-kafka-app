@@ -2,6 +2,9 @@ import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { KAFKA_CLIENT } from '@app/shared';
+import { AccessStrategy } from './strategies';
+import { APP_GUARD } from '@nestjs/core';
+import { AccessTokenGuard } from './guards';
 
 @Module({
   imports: [
@@ -18,7 +21,13 @@ import { KAFKA_CLIENT } from '@app/shared';
     ]),
   ],
   controllers: [AuthController],
-  providers: [],
+  providers: [
+    AccessStrategy,
+    {
+      provide: APP_GUARD,
+      useClass: AccessTokenGuard,
+    },
+  ],
   exports: [],
 })
 export class AuthModule {}

@@ -4,6 +4,7 @@ import { HashService } from './hash';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ValidationService } from './validation';
+import { TokenService } from './token';
 
 @Module({
   imports: [
@@ -23,7 +24,13 @@ import { ValidationService } from './validation';
       inject: [ConfigService],
     }),
   ],
-  providers: [CommonService, HashService, ValidationService],
-  exports: [CommonService, HashService, JwtModule, ValidationService],
+  providers: [CommonService, HashService, ValidationService, TokenService],
+  exports: [
+    CommonService,
+    HashService,
+    JwtModule,
+    ValidationService,
+    TokenService,
+  ],
 })
 export class CommonModule {}

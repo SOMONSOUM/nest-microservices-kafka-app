@@ -3,18 +3,19 @@ import { PrismaService } from '../prisma';
 import {
   LoginDTO,
   LoginResponseDTO,
+  UserResponseDTO,
   RegisterDTO,
   RegisterResponseDTO,
 } from '@app/shared';
 import { HashService } from '@app/common/hash';
-import { JwtService } from '@nestjs/jwt';
+import { TokenService } from '@app/common';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly hashService: HashService,
-    private readonly jwt: JwtService,
+    private readonly tokenService: TokenService,
   ) {}
 
   async login(input: LoginDTO): Promise<LoginResponseDTO> {
@@ -41,16 +42,32 @@ export class AuthService {
       );
     }
 
-    const payload = { id: user.id };
-
-    const accessToken = await this.jwt.signAsync(payload, {
-      algorithm: 'HS256',
-    });
+    const { accessToken, refreshToken } =
+      await this.tokenService.generateTokenPair({
+        userId: user.id,
+      });
 
     return {
       accessToken,
-      refreshToken: 'WIP',
+      refreshToken,
     };
+  }
+
+  async findUserById(id: number): Promise<UserResponseDTO> {
+    const user = await this.prismaService.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        email: true,
+        fullName: true,
+      },
+    });
+
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
+    return user;
   }
 
   async register(input: RegisterDTO): Promise<RegisterResponseDTO> {

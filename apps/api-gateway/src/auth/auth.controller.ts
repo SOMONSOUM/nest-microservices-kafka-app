@@ -1,3 +1,4 @@
+import { CurrentUser, CurrentUserId, Public } from '@app/common';
 import { MicroserviceErrorHandler } from '@app/common/utils';
 import {
   AUTH_PATTERNS,
@@ -6,15 +7,18 @@ import {
   LoginResponseDTO,
   RegisterDTO,
   RegisterResponseDTO,
+  UserResponseDTO,
   WebResponseDTO,
 } from '@app/shared';
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Inject,
   Post,
+  ValidationPipe,
 } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -31,10 +35,12 @@ export class AuthController {
   onModuleInit() {
     this.kafkaClient.subscribeToResponseOf(AUTH_PATTERNS.LOGIN);
     this.kafkaClient.subscribeToResponseOf(AUTH_PATTERNS.REGISTER);
+    this.kafkaClient.subscribeToResponseOf(AUTH_PATTERNS.ME);
   }
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
+  @Public()
   async login(
     @Body() input: LoginDTO,
   ): Promise<WebResponseDTO<LoginResponseDTO>> {
@@ -52,6 +58,7 @@ export class AuthController {
   }
 
   @Post('register')
+  @Public()
   @HttpCode(HttpStatus.CREATED)
   async register(
     @Body() input: RegisterDTO,
@@ -66,6 +73,24 @@ export class AuthController {
       success: true,
       status: HttpStatus.CREATED,
       message: 'User registered successfully',
+      data,
+    };
+  }
+
+  @Get('me')
+  @HttpCode(HttpStatus.OK)
+  async me(
+    @CurrentUserId() id: number,
+  ): Promise<WebResponseDTO<UserResponseDTO>> {
+    const data = await firstValueFrom(
+      MicroserviceErrorHandler.handleMicroserviceResponse(
+        this.kafkaClient.send(AUTH_PATTERNS.ME, id),
+      ),
+    );
+    return {
+      success: true,
+      status: HttpStatus.OK,
+      message: 'User found successfully',
       data,
     };
   }
