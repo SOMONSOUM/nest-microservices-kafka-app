@@ -4,10 +4,9 @@ import {
   LoginResponseDTO,
   RegisterDTO,
   RegisterResponseDTO,
-  USER_PATTERNS,
   UserResponseDTO,
 } from '@app/shared';
-import { Controller, ParseIntPipe, ValidationPipe } from '@nestjs/common';
+import { Controller, ParseIntPipe } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { AuthService } from './auth.service';
 
