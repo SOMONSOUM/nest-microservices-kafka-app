@@ -19,7 +19,7 @@ async function bootstrap() {
       },
     },
   );
-  app.useGlobalPipes(new ValidationPipe({ transform: true }));
+  app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new ErrorFilter());
   await app.listen();
 
