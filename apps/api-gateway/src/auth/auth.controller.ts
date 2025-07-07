@@ -1,4 +1,4 @@
-import { CurrentUser, CurrentUserId, Public } from '@app/common';
+import { CurrentUserId, Public } from '@app/common';
 import { MicroserviceErrorHandler } from '@app/common/utils';
 import {
   AUTH_PATTERNS,
@@ -18,7 +18,6 @@ import {
   HttpStatus,
   Inject,
   Post,
-  ValidationPipe,
 } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
