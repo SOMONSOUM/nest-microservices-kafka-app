@@ -1,6 +1,10 @@
 import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { AuthService } from './auth.service';
+import { PrismaService } from '../prisma';
+import { HashService } from '@app/common/hash';
+import { CommonModule } from '@app/common';
 
 @Module({
   imports: [
@@ -15,9 +19,10 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         },
       },
     ]),
+    CommonModule,
   ],
   controllers: [AuthController],
-  providers: [],
-  exports: [],
+  providers: [AuthService, PrismaService, HashService],
+  exports: [AuthService],
 })
 export class AuthModule {}

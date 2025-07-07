@@ -1,7 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
+import { ErrorFilter } from '@app/common';
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
@@ -18,6 +19,8 @@ async function bootstrap() {
       },
     },
   );
+  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalFilters(new ErrorFilter());
   await app.listen();
 
   Logger.log('🚀 Users microservice is listening');

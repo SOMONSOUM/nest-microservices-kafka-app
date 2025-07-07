@@ -1,15 +1,18 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { Logger, VersioningType } from '@nestjs/common';
+import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const globalPrefix = process.env.GLOBAL_PREFIX ?? 'api';
-  const port = process.env.PORT ?? 3000;
+  const configService = app.get<ConfigService>(ConfigService);
+  const globalPrefix = configService.get<string>('GLOBAL_PREFIX') ?? 'api';
+  const port = configService.get<number>('PORT') ?? 3000;
   app.enableVersioning({
     type: VersioningType.URI,
   });
   app.setGlobalPrefix(globalPrefix);
+  app.useGlobalPipes(new ValidationPipe());
   app.enableCors({ origin: '*' });
   await app.listen(port);
 
