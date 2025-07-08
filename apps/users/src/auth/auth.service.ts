@@ -6,6 +6,7 @@ import {
   UserResponseDTO,
   RegisterDTO,
   RegisterResponseDTO,
+  RefreshTokenResponseDTO,
 } from '@app/shared';
 import { HashService } from '@app/common/hash';
 import { TokenService } from '@app/common';
@@ -88,5 +89,9 @@ export class AuthService {
         fullName: true,
       },
     });
+  }
+
+  async refresh(id: number): Promise<RefreshTokenResponseDTO> {
+    return await this.tokenService.generateTokenPair({ userId: id });
   }
 }

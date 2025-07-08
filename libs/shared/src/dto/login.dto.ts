@@ -32,3 +32,5 @@ export class LoginResponseDTO {
   accessToken: string;
   refreshToken: string;
 }
+
+export class RefreshTokenResponseDTO extends LoginResponseDTO {}

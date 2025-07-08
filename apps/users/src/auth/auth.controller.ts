@@ -28,4 +28,11 @@ export class AuthController {
   handleMe(@Payload(new ParseIntPipe()) id: number): Promise<UserResponseDTO> {
     return this.authService.findUserById(id);
   }
+
+  @MessagePattern(AUTH_PATTERNS.REFRESH)
+  handleRefresh(
+    @Payload(new ParseIntPipe()) id: number,
+  ): Promise<LoginResponseDTO> {
+    return this.authService.refresh(id);
+  }
 }

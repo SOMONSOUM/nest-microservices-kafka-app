@@ -18,9 +18,11 @@ import {
   HttpStatus,
   Inject,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
+import { RefreshTokenGuard } from './guards';
 
 @Controller({
   path: 'auth',
@@ -35,6 +37,7 @@ export class AuthController {
     this.kafkaClient.subscribeToResponseOf(AUTH_PATTERNS.LOGIN);
     this.kafkaClient.subscribeToResponseOf(AUTH_PATTERNS.REGISTER);
     this.kafkaClient.subscribeToResponseOf(AUTH_PATTERNS.ME);
+    this.kafkaClient.subscribeToResponseOf(AUTH_PATTERNS.REFRESH);
   }
 
   @Post('login')
@@ -90,6 +93,26 @@ export class AuthController {
       success: true,
       status: HttpStatus.OK,
       message: 'User found successfully',
+      data,
+    };
+  }
+
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  @Public()
+  @UseGuards(RefreshTokenGuard)
+  async refresh(
+    @CurrentUserId() id: number,
+  ): Promise<WebResponseDTO<UserResponseDTO>> {
+    const data = await firstValueFrom(
+      MicroserviceErrorHandler.handleMicroserviceResponse(
+        this.kafkaClient.send(AUTH_PATTERNS.REFRESH, id),
+      ),
+    );
+    return {
+      success: true,
+      status: HttpStatus.OK,
+      message: 'User refreshed successfully',
       data,
     };
   }
