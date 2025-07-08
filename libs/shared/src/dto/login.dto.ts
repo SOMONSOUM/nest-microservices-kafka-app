@@ -3,6 +3,7 @@ import {
   IsNotEmpty,
   IsString,
   IsStrongPassword,
+  Matches,
 } from 'class-validator';
 
 export class LoginDTO {
@@ -24,6 +25,9 @@ export class LoginDTO {
     minUppercase: 1,
     minNumbers: 1,
     minSymbols: 1,
+  })
+  @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
+    message: 'password too weak',
   })
   password: string;
 }

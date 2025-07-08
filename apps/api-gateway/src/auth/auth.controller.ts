@@ -23,7 +23,9 @@ import {
 import { ClientKafka } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { RefreshTokenGuard } from './guards';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('auth')
 @Controller({
   path: 'auth',
   version: '1',
