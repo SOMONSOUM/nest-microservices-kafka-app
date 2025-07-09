@@ -23,7 +23,7 @@ import {
 import { ClientKafka } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { RefreshTokenGuard } from './guards';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('auth')
 @Controller({
@@ -82,6 +82,7 @@ export class AuthController {
   }
 
   @Get('me')
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
   async me(
     @CurrentUserId() id: number,

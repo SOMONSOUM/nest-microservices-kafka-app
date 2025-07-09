@@ -4,3 +4,4 @@ export * from './validation';
 export * from './filter';
 export * from './decorators';
 export * from './token';
+export * from './logger';

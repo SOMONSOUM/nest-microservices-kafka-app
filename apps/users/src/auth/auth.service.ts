@@ -7,6 +7,8 @@ import {
   RegisterDTO,
   RegisterResponseDTO,
   RefreshTokenResponseDTO,
+  ValidateRefreshTokenDTO,
+  ValidateRefreshTokenResponseDTO,
 } from '@app/shared';
 import { HashService } from '@app/common/hash';
 import { TokenService } from '@app/common';
@@ -47,6 +49,9 @@ export class AuthService {
       await this.tokenService.generateTokenPair({
         userId: user.id,
       });
+
+    const hashedRefreshToken = await this.hashService.hashString(refreshToken);
+    await this.updateHashedRefreshToken(user.id, hashedRefreshToken);
 
     return {
       accessToken,
@@ -89,6 +94,39 @@ export class AuthService {
         fullName: true,
       },
     });
+  }
+
+  async updateHashedRefreshToken(id: number, hashedRefreshToken: string) {
+    return await this.prismaService.user.update({
+      where: { id },
+      data: { hashedRefreshToken },
+    });
+  }
+
+  async validateRefreshToken(
+    input: ValidateRefreshTokenDTO,
+  ): Promise<ValidateRefreshTokenResponseDTO> {
+    const { userId, refreshToken } = input;
+    const user = await this.prismaService.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user || !user.hashedRefreshToken) {
+      throw new HttpException('Invalid refresh token', HttpStatus.UNAUTHORIZED);
+    }
+
+    const isRefreshTokenValid = await this.hashService.compareHash(
+      refreshToken,
+      user.hashedRefreshToken,
+    );
+
+    if (!isRefreshTokenValid) {
+      throw new HttpException('Invalid refresh token', HttpStatus.UNAUTHORIZED);
+    }
+
+    return {
+      userId,
+    };
   }
 
   async refresh(id: number): Promise<RefreshTokenResponseDTO> {

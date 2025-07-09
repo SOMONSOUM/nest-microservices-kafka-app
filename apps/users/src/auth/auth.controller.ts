@@ -5,8 +5,10 @@ import {
   RegisterDTO,
   RegisterResponseDTO,
   UserResponseDTO,
+  ValidateRefreshTokenDTO,
+  ValidateRefreshTokenResponseDTO,
 } from '@app/shared';
-import { Controller, ParseIntPipe } from '@nestjs/common';
+import { Controller, ParseIntPipe, ValidationPipe } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { AuthService } from './auth.service';
 
@@ -34,5 +36,12 @@ export class AuthController {
     @Payload(new ParseIntPipe()) id: number,
   ): Promise<LoginResponseDTO> {
     return this.authService.refresh(id);
+  }
+
+  @MessagePattern(AUTH_PATTERNS.VALIDATE_REFRESH_TOKEN)
+  handleValidateRefreshToken(
+    @Payload(new ValidationPipe()) input: ValidateRefreshTokenDTO,
+  ): Promise<ValidateRefreshTokenResponseDTO> {
+    return this.authService.validateRefreshToken(input);
   }
 }
