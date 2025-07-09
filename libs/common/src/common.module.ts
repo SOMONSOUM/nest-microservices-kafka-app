@@ -13,7 +13,11 @@ import {
 
 @Module({
   imports: [
-    PrometheusModule.register(),
+    PrometheusModule.register({
+      defaultMetrics: {
+        enabled: true,
+      },
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',

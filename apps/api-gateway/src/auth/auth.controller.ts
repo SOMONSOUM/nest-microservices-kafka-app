@@ -25,7 +25,7 @@ import { firstValueFrom } from 'rxjs';
 import { RefreshTokenGuard } from './guards';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
-@ApiTags('auth')
+@ApiTags('Authentication')
 @Controller({
   path: 'auth',
   version: '1',
