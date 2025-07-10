@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { KAFKA_CLIENT } from '@app/shared';
-import { AccessStrategy, RefreshStrategy } from './strategies';
+import { AccessStrategy, LocalStrategy, RefreshStrategy } from './strategies';
 import { APP_GUARD } from '@nestjs/core';
 import { AccessTokenGuard } from './guards';
 
@@ -24,6 +24,7 @@ import { AccessTokenGuard } from './guards';
   providers: [
     AccessStrategy,
     RefreshStrategy,
+    LocalStrategy,
     {
       provide: APP_GUARD,
       useClass: AccessTokenGuard,
