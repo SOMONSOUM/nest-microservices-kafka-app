@@ -1,10 +1,5 @@
 import { MicroserviceErrorHandler } from '@app/common/utils';
-import {
-  AUTH_PATTERNS,
-  KAFKA_CLIENT,
-  LoginDTO,
-  LoginResponseDTO,
-} from '@app/shared';
+import { AUTH_PATTERNS, KAFKA_CLIENT, LoginResponseDTO } from '@app/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { PassportStrategy } from '@nestjs/passport';
